@@ -42,3 +42,11 @@ td.block-type-red {
     border-right: 1px #0a1a1a solid;
     border-bottom: 1px #008080 solid;
 }
+
+td.block-type-green {
+    background-color: green;
+    border-top: 1px #ffffff solid;
+    border-left: 1px #ffffff solid;
+    border-right: 1px #0a1a1a solid;
+    border-bottom: 1px #008080 solid;
+}
