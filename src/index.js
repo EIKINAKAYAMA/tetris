@@ -30,7 +30,6 @@ class Board extends React.Component {
 
   //ここでBordのNumにも色をつける。
   render() {
-    console.log(this.props.board)
     const tbody = [];
 
     for(let i=0; i< y; i++){
@@ -38,7 +37,7 @@ class Board extends React.Component {
       for (let j = 0; j < x; j++){
         let num = i * x + j
         this.props.figure === num
-        ? row.push(<td class = {`block-type-${this.props.color}`}></td>)
+        ? row.push(<td className = {`block-type-${this.props.color}`}></td>)
         : row.push(this.renderSquare(num));
       }
       tbody.push(<tr className = {`table-row`}>{row}</tr>)
@@ -58,9 +57,15 @@ class Tetris extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      figure : 3,
-      color: "blue",
-      histories: [{
+      currentBlock: { //今のブロック
+        figure: null,  //スタート座標
+        color: null,   //色
+      },
+      nextBlock: {    //次落ちる予定のブロック
+        figure: null,
+        color: null,
+      },
+      histories: [{　　//履歴
         board: Array(maxNum).fill(null)
       }],
     }
@@ -72,13 +77,26 @@ class Tetris extends React.Component {
     const history = this.state.histories;
     const current = history[history.length - 1];
     const board = current.board
-
-    this.setState({
-      figure : this.state.figure + x,
-    })
-    console.log(this.state.figure)
-    if(this.state.figure < maxNum && maxNum - 7 < this.state.figure){
+    const figure = this.state.currentBlock.figure
+    
+    //最下層、又は下に色がある時、Fix
+    if((figure < maxNum && maxNum - 7 < figure)　|| (board[figure + x] !== null)){
+      console.log(figure)
       this.fixblock()
+      console.log(figure)
+      this.setState({
+        currentBlock: {
+          figure: null,
+          color: "next",
+        }
+      })
+    }else {
+      this.setState({
+        currentBlock: {
+          figure : figure + x,
+          color : this.state.currentBlock.color,
+        },
+      })
     }
   }
   
@@ -86,26 +104,53 @@ class Tetris extends React.Component {
     const history = this.state.histories;
     const current = history[history.length - 1];
     const board = current.board
+    const figure = this.state.currentBlock.figure
+    const color = this.state.currentBlock.color
     
-    board[this.state.figure] = this.state.color
+    console.log(figure)
+    console.log(color)
+    board[figure] = color
+
+    console.log(board)
 
     this.setState({
       histories: history.concat([{
         board: board
       }]),
     })
-
-    console.log(this.state.histories)
   }
   
   mainloop(){
+    if(this.state.currentBlock.color === null){
+      this.setState({
+        currentBlock: {
+          figure: 3 -x,   //スタート位置はマイナスから
+          color: "blue",
+        },
+        nextBlock: {
+          figure: 2- x,   //スタート位置はマイナスから
+          color: "green",
+        },
+      })
+    }else if(this.state.currentBlock.color === "next"){
+      this.setState({
+        currentBlock: this.state.nextBlock,
+      })
 
-    setTimeout(this.fallblock.bind(this), 1000)
+    }
+    this.fallblock()
+    
+    setTimeout(this.mainloop.bind(this), 500)
   }
   
   startGame(){
     this.mainloop()
   }
+
+  componentDidMount() {
+    this.startGame();
+  }
+
 
 
   render() {
@@ -113,13 +158,11 @@ class Tetris extends React.Component {
     const current = history[history.length - 1];
     // 1秒ごとにfallblock関数をする
 
-    this.startGame()
-
     return(
       <Board
         board = {current.board}
-        color ={this.state.color}
-        figure = {this.state.figure}
+        color ={this.state.currentBlock.color}
+        figure = {this.state.currentBlock.figure}
       />
     )
   }
