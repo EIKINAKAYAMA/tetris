@@ -31,12 +31,13 @@ class Board extends React.Component {
   //ここでBordのNumにも色をつける。
   render() {
     const tbody = [];
+    console.log(this.props.figures)
 
     for(let i=0; i< y; i++){
       const row = [];
       for (let j = 0; j < x; j++){
         let num = i * x + j
-        this.props.figure === num
+        this.props.figures.includes(num)
         ? row.push(<td className = {`block-type-${this.props.color}`}></td>)
         : row.push(this.renderSquare(num));
       }
@@ -58,11 +59,11 @@ class Tetris extends React.Component {
     super(props);
     this.state = {
       currentBlock: { //今のブロック
-        figure: null,  //スタート座標
+        figures: [],  //スタート座標
         color: null,   //色
       },
       nextBlock: {    //次落ちる予定のブロック
-        figure: null,
+        figures: [],
         color: null,
       },
       histories: [{　　//履歴
@@ -71,29 +72,37 @@ class Tetris extends React.Component {
     }
   }
 
-
   // 落とす関数（y軸をズラす）
   fallblock() {
     const history = this.state.histories;
     const current = history[history.length - 1];
-    const board = current.board
-    const figure = this.state.currentBlock.figure
-    
-    //最下層、又は下に色がある時、Fix
-    if((figure < maxNum && maxNum - 7 < figure)　|| (board[figure + x] !== null)){
-      console.log(figure)
+    const board = current.board;
+
+    //状態として保持していないCurrentBlockの現座標
+    const figures = this.state.currentBlock.figures.slice(0);
+
+    //任意のブロック配列に対して、ブロックにおける最下層のFix判定用配列を作成。
+    const filteredBottomFigure = figures.filter(f => figures.find(figure => figure === f + x))
+    const JudgeBottomFigure = figures.filter(f => filteredBottomFigure.indexOf(f) === -1)
+
+    console.log(JudgeBottomFigure)
+
+    // 配列の値のいずれかが、最下層、又は下に色がある時、Fix
+    if( JudgeBottomFigure.find(f => maxNum < f + x) || JudgeBottomFigure.find(f => board[f + x] !== null)){
+      console.log("FixPoint")
       this.fixblock()
-      console.log(figure)
       this.setState({
         currentBlock: {
-          figure: null,
+          figures: [],
           color: "next",
         }
       })
     }else {
       this.setState({
         currentBlock: {
-          figure : figure + x,
+          figures : figures.map((figure) => {
+            return figure = figure + x
+          }),
           color : this.state.currentBlock.color,
         },
       })
@@ -104,14 +113,10 @@ class Tetris extends React.Component {
     const history = this.state.histories;
     const current = history[history.length - 1];
     const board = current.board
-    const figure = this.state.currentBlock.figure
+    const figures = this.state.currentBlock.figures
     const color = this.state.currentBlock.color
-    
-    console.log(figure)
-    console.log(color)
-    board[figure] = color
 
-    console.log(board)
+    figures.forEach(f => board[f] = color)
 
     this.setState({
       histories: history.concat([{
@@ -124,11 +129,11 @@ class Tetris extends React.Component {
     if(this.state.currentBlock.color === null){
       this.setState({
         currentBlock: {
-          figure: 3 -x,   //スタート位置はマイナスから
+          figures: [3-2*x, 3-x, 3,],   //スタート位置はマイナスから
           color: "blue",
         },
         nextBlock: {
-          figure: 2- x,   //スタート位置はマイナスから
+          figures: [2 -x, 3 -x],   //スタート位置はマイナスから
           color: "green",
         },
       })
@@ -140,7 +145,7 @@ class Tetris extends React.Component {
     }
     this.fallblock()
     
-    setTimeout(this.mainloop.bind(this), 500)
+    setTimeout(this.mainloop.bind(this), 1000)
   }
   
   startGame(){
@@ -162,7 +167,7 @@ class Tetris extends React.Component {
       <Board
         board = {current.board}
         color ={this.state.currentBlock.color}
-        figure = {this.state.currentBlock.figure}
+        figures = {this.state.currentBlock.figures}
       />
     )
   }
