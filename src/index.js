@@ -70,7 +70,77 @@ class Tetris extends React.Component {
         board: Array(maxNum).fill(null)
       }],
     }
+    //キー操作が行われた時
+    window.onkeydown = (e) => {
+      if (this.state.currentBlock == null) {
+        return;
+      }
+
+      if (e.key ==="ArrowLeft") {
+        this.moveLeft();
+      }else if (e.key === "ArrowUp") {
+        console.log("rotate")
+        // this.rotate();
+      }else if (e.key === "ArrowRight") {
+        this.moveRight();
+      }else if (e.key === "ArrowDown") {
+        this.fallblock();
+      }
+    }
   }
+
+  //左に動かす
+  moveLeft(){
+    const history = this.state.histories;
+    const current = history[history.length - 1];
+    const board = current.board;
+    const figures = this.state.currentBlock.figures.slice(0);
+
+    //左が壁の場合は、return
+    if(figures.find(f => f % x === 0) ){
+      return;
+    }
+
+    // 既に色がついているブロックがある場合は固定。
+    if(figures.find(f => board[f - 1] !== null)){
+      return;
+    }else{
+      //通常時は左にズラすのみ。
+      this.setState({
+        currentBlock: {
+          figures : figures.map(m => m = m - 1),
+          color : this.state.currentBlock.color,
+        }
+      })
+    }
+  }
+
+  //右に動かす
+  moveRight(){
+    const history = this.state.histories;
+    const current = history[history.length - 1];
+    const board = current.board;
+    const figures = this.state.currentBlock.figures.slice(0);
+
+    //左が壁の場合は、return
+    if(figures.find(f => f % x === x - 1) ){
+      return;
+    }
+
+    // 既に色がついているブロックがある場合は固定。
+    if(figures.find(f => board[f + 1] !== null)){
+      return;
+    }else{
+      //通常時は左にズラすのみ。
+      this.setState({
+        currentBlock: {
+          figures : figures.map(m => m = m + 1),
+          color : this.state.currentBlock.color,
+        }
+      })
+    }
+  }
+
 
   // 落とす関数（y軸をズラす）
   fallblock() {
@@ -85,11 +155,8 @@ class Tetris extends React.Component {
     const filteredBottomFigure = figures.filter(f => figures.find(figure => figure === f + x))
     const JudgeBottomFigure = figures.filter(f => filteredBottomFigure.indexOf(f) === -1)
 
-    console.log(JudgeBottomFigure)
-
     // 配列の値のいずれかが、最下層、又は下に色がある時、Fix
     if( JudgeBottomFigure.find(f => maxNum < f + x) || JudgeBottomFigure.find(f => board[f + x] !== null)){
-      console.log("FixPoint")
       this.fixblock()
       this.setState({
         currentBlock: {
@@ -129,11 +196,11 @@ class Tetris extends React.Component {
     if(this.state.currentBlock.color === null){
       this.setState({
         currentBlock: {
-          figures: [3-2*x, 3-x, 3,],   //スタート位置はマイナスから
+          figures: [3, 3 + x, 3 + 2*x,],   //左右移動ロジックを考慮し、スタート位置は必ず０より大きく
           color: "blue",
         },
         nextBlock: {
-          figures: [2 -x, 3 -x],   //スタート位置はマイナスから
+          figures: [2, 3, 2 + x],   //左右移動ロジックを考慮し、スタート位置は必ず０より大きく
           color: "green",
         },
       })
@@ -161,7 +228,6 @@ class Tetris extends React.Component {
   render() {
     const history = this.state.histories;
     const current = history[history.length - 1];
-    // 1秒ごとにfallblock関数をする
 
     return(
       <Board
