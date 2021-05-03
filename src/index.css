@@ -24,17 +24,30 @@ html {
     margin: 0px;
     padding: 0px;
     border: solid 1px white;
-    background-color:rgba(255,0,0,255);
+    background-color:black;
 }
 
-td.block-type-blue {
+td.block-type-lightblue {
     background-color: #00ffff;
     border-top: 1px #ffffff solid;
     border-left: 1px #ffffff solid;
     border-right: 1px #0a1a1a solid;
     border-bottom: 1px #008080 solid;
 }
-
+td.block-type-yellow {
+    background-color: yellow;
+    border-top: 1px #ffffff solid;
+    border-left: 1px #ffffff solid;
+    border-right: 1px #0a1a1a solid;
+    border-bottom: 1px #008080 solid;
+}
+td.block-type-green {
+    background-color: green;
+    border-top: 1px #ffffff solid;
+    border-left: 1px #ffffff solid;
+    border-right: 1px #0a1a1a solid;
+    border-bottom: 1px #008080 solid;
+}
 td.block-type-red {
     background-color: red;
     border-top: 1px #ffffff solid;
@@ -42,9 +55,22 @@ td.block-type-red {
     border-right: 1px #0a1a1a solid;
     border-bottom: 1px #008080 solid;
 }
-
-td.block-type-green {
-    background-color: green;
+td.block-type-blue {
+    background-color: blue;
+    border-top: 1px #ffffff solid;
+    border-left: 1px #ffffff solid;
+    border-right: 1px #0a1a1a solid;
+    border-bottom: 1px #008080 solid;
+}
+td.block-type-orange {
+    background-color: orange;
+    border-top: 1px #ffffff solid;
+    border-left: 1px #ffffff solid;
+    border-right: 1px #0a1a1a solid;
+    border-bottom: 1px #008080 solid;
+}
+td.block-type-purple {
+    background-color: purple;
     border-top: 1px #ffffff solid;
     border-left: 1px #ffffff solid;
     border-right: 1px #0a1a1a solid;
