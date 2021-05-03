@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-const x = 7;
-const y = 7;
+const x = 9; //左右隠された一列を含むものとする。
+const y = 9;
 const maxNum = x*y
 const midleX = Math.floor(x/2);
 const blocks = 
@@ -127,6 +127,9 @@ class Tetris extends React.Component {
 
   // 回転させる
   rotate(){
+    const history = this.state.histories;
+    const current = history[history.length - 1];
+    const board = current.board;
     const figures = this.state.currentBlock.figures.slice(0);
     const rotated_figures = [];
     const color = this.state.currentBlock.color
@@ -255,13 +258,19 @@ class Tetris extends React.Component {
       return;
     }
 
-    this.setState({
-      currentBlock: {
-        figures: rotated_figures,
-        color: color,
-        angle: rotated_angle,
-      }
-    })
+    if( rotated_figures.find(f => f % x === 0 || f % x === x - 1)){
+      return;
+    }else if(rotated_figures.find(f => board[f - 1] !== null)){
+      return;
+    }else{
+      this.setState({
+        currentBlock: {
+          figures: rotated_figures,
+          color: color,
+          angle: rotated_angle,
+        }
+      })
+    }
   }
 
   //左に動かす
@@ -272,7 +281,7 @@ class Tetris extends React.Component {
     const figures = this.state.currentBlock.figures.slice(0);
 
     //左が壁の場合は、return
-    if(figures.find(f => f % x === 0) ){
+    if(figures.find(f => f % x === 1) ){
       return;
     }
 
@@ -299,7 +308,7 @@ class Tetris extends React.Component {
     const figures = this.state.currentBlock.figures.slice(0);
 
     //左が壁の場合は、return
-    if(figures.find(f => f % x === x - 1) ){
+    if(figures.find(f => f % x === x - 2) ){
       return;
     }
 
@@ -384,6 +393,7 @@ class Tetris extends React.Component {
     }else if(this.state.currentBlock.color === "next"){
       this.setState({
         currentBlock: this.state.nextBlock,
+        nextBlock: blocks[this.getRandomBlock()],
       })
     }
     this.fallblock()
