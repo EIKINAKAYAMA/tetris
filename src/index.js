@@ -2,14 +2,49 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-// const blocks = [
-//   {blue: [2,3,4,16,17,18]},
-//   {red: [3,4,17,18]}
-// ]
-
 const x = 7;
 const y = 7;
 const maxNum = x*y
+const midleX = Math.floor(x/2);
+const blocks = 
+  [
+    {
+      figures: [midleX-1,midleX, midleX+1, midleX+2],
+      color: "lightblue",
+      angle: 0,
+    },
+    {
+      figures: [midleX,midleX+1, midleX+x, midleX+1+x],
+      color: "yellow",
+      angle: 0,
+    },
+    {
+      figures: [midleX, midleX+1, midleX-1+x, midleX+x],
+      color: "green",
+      angle: 0,
+    },
+    {
+      figures: [midleX-1, midleX, midleX+x, midleX+x+1],
+      color: "red",
+      angle: 0,
+    },
+    {
+      figures: [midleX-1, midleX+x-1, midleX+x, midleX+x+1],
+      color: "blue",
+      angle: 0,
+    },
+    {
+      figures: [midleX+1, midleX+x-1, midleX+x, midleX+x+1],
+      color: "orange",
+      angle: 0,
+    },
+    {
+      figures: [midleX, midleX+x-1, midleX+x, midleX+x+1],
+      color: "purple",
+      angle: 0,
+    },
+  ]
+
 
 function Square(props) {
   return (
@@ -61,10 +96,12 @@ class Tetris extends React.Component {
       currentBlock: { //今のブロック
         figures: [],  //スタート座標
         color: null,   //色
+        angle: null,
       },
       nextBlock: {    //次落ちる予定のブロック
         figures: [],
         color: null,
+        angle: null,
       },
       histories: [{　　//履歴
         board: Array(maxNum).fill(null)
@@ -79,14 +116,152 @@ class Tetris extends React.Component {
       if (e.key ==="ArrowLeft") {
         this.moveLeft();
       }else if (e.key === "ArrowUp") {
-        console.log("rotate")
-        // this.rotate();
+        this.rotate();
       }else if (e.key === "ArrowRight") {
         this.moveRight();
       }else if (e.key === "ArrowDown") {
         this.fallblock();
       }
     }
+  }
+
+  // 回転させる
+  rotate(){
+    const figures = this.state.currentBlock.figures.slice(0);
+    const rotated_figures = [];
+    const color = this.state.currentBlock.color
+    const angle = this.state.currentBlock.angle
+    const rotated_angle = (angle !== 270) ? (angle + 90) : 0
+    
+    if(color === "lightblue"){
+      if(angle=== 0 || angle===180){
+        rotated_figures[0] = figures[0]-2*x+2
+        rotated_figures[1] = figures[1]-x+1
+        rotated_figures[2] = figures[2]
+        rotated_figures[3] = figures[3]+x-1 
+      }else if(angle=== 90 || angle===270){
+        rotated_figures[0] = figures[0]+2*x-2
+        rotated_figures[1] = figures[1]+x-1
+        rotated_figures[2] = figures[2]
+        rotated_figures[3] = figures[3]-x+1 
+      }else{
+        alert("NG")
+      }
+    }else if(color === "green"){
+      if(angle=== 0 || angle===180){
+        rotated_figures[0] = figures[0]+x
+        rotated_figures[1] = figures[1]+2*x-1
+        rotated_figures[2] = figures[2]-x
+        rotated_figures[3] = figures[3]-1
+      }else if(angle=== 90 || angle===270){
+        rotated_figures[0] = figures[0]-x
+        rotated_figures[1] = figures[1]-2*x+1
+        rotated_figures[2] = figures[2]+x
+        rotated_figures[3] = figures[3]+1
+      }else{
+        alert("NG")
+      }
+      
+    }else if(color === "red"){
+      if(angle=== 0 || angle===180){
+        rotated_figures[0] = figures[0]+2
+        rotated_figures[1] = figures[1]+x+1
+        rotated_figures[2] = figures[2]
+        rotated_figures[3] = figures[3]+x-1
+      }else if(angle=== 90 || angle===270){
+        rotated_figures[0] = figures[0]-2
+        rotated_figures[1] = figures[1]-x-1
+        rotated_figures[2] = figures[2]
+        rotated_figures[3] = figures[3]-x+1
+      }else{
+        alert("NG")
+      }
+
+    }else if(color === "blue"){
+      if(angle=== 0){
+        rotated_figures[0] = figures[0]+2
+        rotated_figures[1] = figures[1]-x+1
+        rotated_figures[2] = figures[2]
+        rotated_figures[3] = figures[3]+x-1
+      }else if(angle=== 90){
+        rotated_figures[0] = figures[0]+2*x
+        rotated_figures[1] = figures[1]+x+1
+        rotated_figures[2] = figures[2]
+        rotated_figures[3] = figures[3]-x-1
+      }else if(angle=== 180){
+        rotated_figures[0] = figures[0]-2
+        rotated_figures[1] = figures[1]+x-1
+        rotated_figures[2] = figures[2]
+        rotated_figures[3] = figures[3]-x+1
+      }else if(angle=== 270){
+        rotated_figures[0] = figures[0]-2*x
+        rotated_figures[1] = figures[1]-x-1
+        rotated_figures[2] = figures[2]
+        rotated_figures[3] = figures[3]+x+1
+      }else{
+        alert("NG")
+      }
+      
+    }else if(color === "orange"){
+      if(angle=== 0){
+        rotated_figures[0] = figures[0]+2*x
+        rotated_figures[1] = figures[1]-x+1
+        rotated_figures[2] = figures[2]
+        rotated_figures[3] = figures[3]+x-1
+      }else if(angle=== 90){
+        rotated_figures[0] = figures[0]-2
+        rotated_figures[1] = figures[1]+x+1
+        rotated_figures[2] = figures[2]
+        rotated_figures[3] = figures[3]-x-1
+      }else if(angle=== 180){
+        rotated_figures[0] = figures[0]-2*x
+        rotated_figures[1] = figures[1]+x-1
+        rotated_figures[2] = figures[2]
+        rotated_figures[3] = figures[3]-x+1
+      }else if(angle=== 270){
+        rotated_figures[0] = figures[0]+2
+        rotated_figures[1] = figures[1]-x-1
+        rotated_figures[2] = figures[2]
+        rotated_figures[3] = figures[3]+x+1
+      }else{
+        alert("NG")
+      }
+      
+    }else if(color === "purple"){
+      if(angle=== 0){
+        rotated_figures[0] = figures[0]+x+1
+        rotated_figures[1] = figures[1]-x+1
+        rotated_figures[2] = figures[2]
+        rotated_figures[3] = figures[3]+x-1
+      }else if(angle=== 90){
+        rotated_figures[0] = figures[0]+x-1
+        rotated_figures[1] = figures[1]+x+1
+        rotated_figures[2] = figures[2]
+        rotated_figures[3] = figures[3]-x-1
+      }else if(angle=== 180){
+        rotated_figures[0] = figures[0]-x-1
+        rotated_figures[1] = figures[1]+x-1
+        rotated_figures[2] = figures[2]
+        rotated_figures[3] = figures[3]-x+1
+      }else if(angle=== 270){
+        rotated_figures[0] = figures[0]-x+1
+        rotated_figures[1] = figures[1]-x-1
+        rotated_figures[2] = figures[2]
+        rotated_figures[3] = figures[3]+x+1
+      }else{
+        alert("NG")
+      }
+    }else{
+      return;
+    }
+
+    this.setState({
+      currentBlock: {
+        figures: rotated_figures,
+        color: color,
+        angle: rotated_angle,
+      }
+    })
   }
 
   //左に動かす
@@ -110,6 +285,7 @@ class Tetris extends React.Component {
         currentBlock: {
           figures : figures.map(m => m = m - 1),
           color : this.state.currentBlock.color,
+          angle : this.state.currentBlock.angle, 
         }
       })
     }
@@ -136,6 +312,7 @@ class Tetris extends React.Component {
         currentBlock: {
           figures : figures.map(m => m = m + 1),
           color : this.state.currentBlock.color,
+          angle : this.state.currentBlock.angle,
         }
       })
     }
@@ -162,6 +339,7 @@ class Tetris extends React.Component {
         currentBlock: {
           figures: [],
           color: "next",
+          angle: 0,
         }
       })
     }else {
@@ -171,6 +349,7 @@ class Tetris extends React.Component {
             return figure = figure + x
           }),
           color : this.state.currentBlock.color,
+          angle : this.state.currentBlock.angle,
         },
       })
     }
@@ -191,24 +370,21 @@ class Tetris extends React.Component {
       }]),
     })
   }
+
+  getRandomBlock(){
+    return Math.floor(Math.random()*7)
+  }
   
   mainloop(){
     if(this.state.currentBlock.color === null){
       this.setState({
-        currentBlock: {
-          figures: [3, 3 + x, 3 + 2*x,],   //左右移動ロジックを考慮し、スタート位置は必ず０より大きく
-          color: "blue",
-        },
-        nextBlock: {
-          figures: [2, 3, 2 + x],   //左右移動ロジックを考慮し、スタート位置は必ず０より大きく
-          color: "green",
-        },
+        currentBlock: blocks[this.getRandomBlock()],
+        nextBlock: blocks[this.getRandomBlock()],
       })
     }else if(this.state.currentBlock.color === "next"){
       this.setState({
         currentBlock: this.state.nextBlock,
       })
-
     }
     this.fallblock()
     
@@ -222,8 +398,6 @@ class Tetris extends React.Component {
   componentDidMount() {
     this.startGame();
   }
-
-
 
   render() {
     const history = this.state.histories;
