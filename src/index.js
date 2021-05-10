@@ -66,7 +66,6 @@ class Board extends React.Component {
   //ここでBordのNumにも色をつける。
   render() {
     const tbody = [];
-    console.log(this.props.figures)
 
     for(let i=0; i< y; i++){
       const row = [];
@@ -345,6 +344,7 @@ class Tetris extends React.Component {
       this.fixblock();
       this.deleteLine();
       this.setState({
+        histories: this.state.histories,
         currentBlock: {
           figures: [],
           color: "next",
@@ -380,24 +380,46 @@ class Tetris extends React.Component {
     })
   }
 
-  // ビジーwaitを使う方法
-  sleep(waitMsec) {
-    var startMsec = new Date();
+  // 時間調整用のSleep関数_必要に応じて使用
+  // sleep(waitMsec) {
+  //   var startMsec = new Date();
 
-    // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
-    while (new Date() - startMsec < waitMsec);
-  }
+  //   // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
+  //   while (new Date() - startMsec < waitMsec);
+  // }
 
   delete(){
-    
+    const history = this.state.histories;
+    const current = history[history.length - 1];
+    const board = current.board
+    const copyboard = board.slice(0)
+
+    if(board.includes("delete")){
+      for(var k=0; k < y; k++){
+        if(copyboard[x*k] === "delete"){
+          copyboard.splice(x*k, x)
+          for(var j=0; j < x; j++){
+            copyboard.splice(1, 0, null)
+          }
+        }
+      }
+  
+      this.setState({
+        histories: history.concat([{
+          board: copyboard
+        }])
+      })
+    }else{
+      return
+    }
   }
 
   deleteLine(){
     const history = this.state.histories;
     const current = history[history.length - 1];
+    const copyhistories = this.state.histories.slice(0, history.length -1)
     const board = current.board
     const copyboard = board.slice(0)
-    
     
     //削除対象の列を空白にする。
     for(var i=0; i < y; i++){
@@ -412,39 +434,11 @@ class Tetris extends React.Component {
       }
     }
 
-    
-    
-    // if(copyboard.includes("delete")){
-    //   console.log(copyboard)
-    //   const copyhistories = this.state.histories.slice(0, history.length -1)
-    //   console.log(copyhistories)
-    //   copyhistories.push({board: copyboard})
-    //   console.log(copyhistories)
-
-    //   this.setState({
-    //     histories: copyhistories
-    //   })
-    //   this.sleep(5000)
-    // }
-    
-    //削除対象の列を削除し、空白列を配列初めに追加する。
-    for(var k=0; k < y; k++){
-      if(copyboard[x*k] === "delete"){
-        copyboard.splice(x*k, x)
-        for(var j=0; j < x; j++){
-          copyboard.splice(1, 0, null)
-        }
-      }
-    }
+    copyhistories.push({board: copyboard})
 
     this.setState({
-      histories: history.concat([{
-        board: copyboard
-      }])
+      histories: copyhistories
     })
-    // それより上のブロックを全て＋xする
-    
-    //空白の列を最上位に差し込む。
   }
 
   getRandomBlock(){
@@ -452,20 +446,31 @@ class Tetris extends React.Component {
   }
   
   mainloop(){
+    const history = this.state.histories;
+    const current = history[history.length - 1];
+    const board = current.board
+    if(board.includes("delete")){
+      this.delete();
+    }
+
     if(this.state.currentBlock.color === null){
       this.setState({
-        // currentBlock: blocks[this.getRandomBlock()],
-        currentBlock: blocks[1],
-        nextBlock: blocks[1],
-        // nextBlock: blocks[this.getRandomBlock()],
+        currentBlock: blocks[this.getRandomBlock()],
+        // currentBlock: blocks[1],
+        // nextBlock: blocks[1],
+        nextBlock: blocks[this.getRandomBlock()],
       })
     }else if(this.state.currentBlock.color === "next"){
       this.setState({
         currentBlock: this.state.nextBlock,
-        // nextBlock: blocks[this.getRandomBlock()],
-        nextBlock: blocks[1]
+        nextBlock: blocks[this.getRandomBlock()],
+        // nextBlock: blocks[1]
       })
     }
+
+    //落ちるバッファチェック
+    
+
     this.fallblock();
 
     setTimeout(this.mainloop.bind(this), 1000)
