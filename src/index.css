@@ -13,6 +13,14 @@ html {
     background-color: #333333;
 }
 
+.information{
+    padding: 10px;
+}
+
+.score-message{
+    padding-top:20px;
+}
+
 .board-table {
     border-collapse: separate;
     border-spacing: 0;
@@ -25,6 +33,17 @@ html {
     padding: 0px;
     border: solid 1px white;
     background-color:black;
+}
+
+td.block-type-null {
+    background-color:black;
+    border-top: 1px #ffffff solid;
+    border-left: 1px #ffffff solid;
+    border-right: 1px #0a1a1a solid;
+    border-bottom: 1px #008080 solid;
+}
+td.block-type-wall {
+    background-color:white;
 }
 
 td.block-type-lightblue {
@@ -78,6 +97,7 @@ td.block-type-purple {
 }
 
 .tetris-panel-container {
+    width: 200px;
     display: flex;
     padding-left: 10px;
     padding-right: 10px;
