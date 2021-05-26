@@ -81,20 +81,20 @@ class Table extends React.Component {
   render () {
     const nextX = 2
     const nextY = 4
+    const tbody = []
     const templateblocks = blocktemplate(nextX, nextY)
     const blocks = this.props.color ? templateblocks.filter(f => f.color === this.props.color) : [{ figures: [-1] }]
     const figures = blocks[0].figures
-
-    const tbody = [...Array(nextX)].map((_, i) => {
-      const row = [...Array(nextY)].map((_, j) => {
+    for (let i = 0; i < nextX; i++) {
+      const row = []
+      for (let j = 0; j < nextY; j++) {
         const num = i * 4 + j
-        return figures.includes(num)
-          ? <td key={`table-td ${num}`} className={`block-type-${this.props.color}`} />
-          : this.renderSquare(num)
-      })
-
-      return <tr key={`table-tr ${i}`} className='table-row'>{row}</tr>
-    })
+        figures.includes(num)
+          ? row.push(<td key={`table-td ${num}`} className={`block-type-${this.props.color}`} />)
+          : row.push(this.renderSquare(num))
+      }
+      tbody.push(<tr key={`table-tr ${i}`} className='table-row'>{row}</tr>)
+    }
 
     return (
       <table className='board-table'>
@@ -113,27 +113,21 @@ class Board extends React.Component {
   }
 
   render () {
-    const tbody = [...Array(y)].map((_, i) => {
-      // ブロック出現時のリアリティを出すため、上に列を隠す
-      if (i >= 2) {
-        const row = [...Array(x)].map((_, j) => {
-          const num = i * x + j
-          // return this.props.figures.includes(num)
-          // ? <td key={`board-td${num}`} className = {`block-type-${this.props.color}`}></td>
-          // : this.renderSquare(num)
-          if (num % x === 0 || num % x === x - 1) {
-            return (<td key={`board-td${num}`} className='block-type-wall' />)
-          } else if (this.props.figures.includes(num)) {
-            return (<td key={`board-td${num}`} className={`block-type-${this.props.color}`} />)
-          } else {
-            return (this.renderSquare(num))
-          }
-        })
-        return <tr key={`board-tr${i}`} className='table-row'>{row}</tr>
-      } else {
-        return null
+    const tbody = []
+    for (let i = 2; i < y; i++) {
+      const row = []
+      for (let j = 0; j < x; j++) {
+        const num = i * x + j
+        if (num % x === 0 || num % x === x - 1) {
+          row.push(<td key={`board-td${num}`} className='block-type-wall' />)
+        } else if (this.props.figures.includes(num)) {
+          row.push(<td key={`board-td${num}`} className={`block-type-${this.props.color}`} />)
+        } else {
+          row.push(this.renderSquare(num))
+        }
       }
-    })
+      tbody.push(<tr key={`board-tr${i}`} className='table-row'>{row}</tr>)
+    }
 
     return (
       <table className='board-table'>
@@ -431,19 +425,15 @@ class Tetris extends React.Component {
   delete () {
     const history = this.state.histories
     const copyboard = history[history.length - 1].board.slice(0)
-    let LineConter = 0;
+    let LineConter = 0
 
-    [...Array(y)].map((_, i) => {
+    for (let i = 0; i < y; i++) {
       if (copyboard[x * i] === 'delete') {
-        return (
-          copyboard.splice(x * i, x),
-          LineConter++,
-          [...Array(x)].map(() => copyboard.splice(1, 0, null))
-        )
-      } else {
-        return null
+        copyboard.splice(x * i, x)
+        LineConter++
+        [...Array(x)].map(() => copyboard.splice(1, 0, null))
       }
-    })
+    }
 
     this.setState({
       histories: history.concat([{
@@ -482,7 +472,18 @@ class Tetris extends React.Component {
   cleateblock () {
     const blocks = blocktemplate(middleX, x)
     return blocks[this.getRandomBlock()]
-    // return blocks[1]
+  }
+
+  changeInfo (level, message, judge, timeId, time) {
+    clearTimeout(timeId)
+    if (time !== null) {
+      timeId = setTimeout(this.mainloop.bind(this), time)
+    }
+    this.setState({
+      level: level,
+      message: message,
+      judge: judge
+    })
   }
 
   mainloop () {
@@ -490,11 +491,12 @@ class Tetris extends React.Component {
     const current = history[history.length - 1]
     const board = current.board
     const nextBlock = this.state.nextBlock.figures
+    const level = this.state.level
 
     if (board.includes('delete')) {
       this.delete()
     }
-    let timeId = setTimeout(this.mainloop.bind(this), 1000)
+    const timeId = setTimeout(this.mainloop.bind(this), 1000)
 
     // ブロックを作成する（For creating blocks）
     if (this.state.currentBlock.color === 'next') {
@@ -506,61 +508,22 @@ class Tetris extends React.Component {
 
     // 次のブロックが出現する場所に、1個でも色があったら、ゲームオーバー
     if (nextBlock.find(f => board[f] !== null)) {
-      clearTimeout(timeId)
-      if (this.state.score >= 5000) {
-        this.setState({
-          message: '5000点を超えるとわ。。。 いっぱい遊んで、くれたんやな、、、ありがとう！！！完敗や',
-          judge: 'You are winner'
-        })
-      } else {
-        this.setState({
-          message: 'がははは、100年早いわ！出直してきんしゃい！',
-          judge: 'You are loser'
-        })
-      }
-      return
+      this.state.score >= 5000
+        ? this.changeInfo(level, '5000点を超えるとわ。。。 いっぱい遊んで、くれたんやな、、、ありがとう！！！完敗や', 'You are winner', timeId, null)
+        : this.changeInfo(level, 'がははは、100年早いわ！出直してきんしゃい！', 'You are loser', timeId, null)
     } else {
       if (this.state.score < 100) {
-        this.setState({
-          message: 'さて、お手並み拝見させて貰おうか'
-        })
+        this.changeInfo(level, 'さて、お手並み拝見させて貰おうか', '', timeId, 1000)
       } else if (this.state.score < 1000) {
-        clearTimeout(timeId)
-        timeId = setTimeout(this.mainloop.bind(this), 500)
-        this.setState({
-          level: 2,
-          message: 'ほほう！やり方は、知っているみたいだな。それじゃ行くぞ'
-        })
+        this.changeInfo(2, 'ほほう！やり方は、知っているみたいだな。それじゃ行くぞ', '', timeId, 500)
       } else if (this.state.score < 1700) {
-        clearTimeout(timeId)
-        timeId = setTimeout(this.mainloop.bind(this), 350)
-        this.setState({
-          level: 3,
-          message: 'むむむ、なかなかうまいな'
-        })
+        this.changeInfo(3, 'むむむ、なかなかうまいな', '', timeId, 350)
       } else if (this.state.score < 3000) {
-        clearTimeout(timeId)
-        timeId = setTimeout(this.mainloop.bind(this), 200)
-        this.setState({
-          level: 4,
-          message: 'ま、ま、まだ大丈夫だ'
-        })
+        this.changeInfo(4, 'ま、ま、まだ大丈夫だ', '', timeId, 200)
       } else if (this.state.score < 4100) {
-        clearTimeout(timeId)
-        timeId = setTimeout(this.mainloop.bind(this), 150)
-        this.setState({
-          level: 'MAX',
-          message: 'こ、このままだと、負けてしまう。。あれを準備しなければ'
-        })
-      } else if (this.state.score < 6600) {
-        clearTimeout(timeId)
-        timeId = setTimeout(this.mainloop.bind(this), 10)
-        this.setState({
-          level: '奥義発動',
-          message: '奥義発動'
-        })
+        this.changeInfo('MAX', 'こ、このままだと、負けてしまう。。あれを準備しなければ', '', timeId, 150)
       } else {
-        return
+        this.changeInfo('奥義発動', '奥義発動', '', timeId, 10)
       }
     }
     this.fallblock()
