@@ -29,13 +29,13 @@ Reactチュートリアル https://ja.reactjs.org/tutorial/tutorial.html<br>
 　　例1：ビット演算によるあたり判定。<br>
 　　例2 : テトリミノ単体に対して、二次元行列を作成し回転を考慮。<br>
        
-　　参考：http://kmaebashi.com/programmer/reacttetris/program.html
-　　一般的なロジックを元に、Reactでテトリスを作成しているサイトになります。
+　　参考：http://kmaebashi.com/programmer/reacttetris/program.html<br>
+　　一般的なロジックを元に、Reactでテトリスを作成しているサイトになります。<br>
 　　UIや考え方など参考になったのでオススメです。
 
-　・本ロジック
-　　Reactチュートリアルと同様、盤面に対して全てのマス目の数を保持しています。
-       ぜひ、Reactチュートリアルの作成を終えた方々が、次に進まれるステップになればと思います。
+　・本ロジック<br>
+　　Reactチュートリアルと同様、盤面に対して全てのマス目の数を保持しています。<br>
+   ぜひ、Reactチュートリアルの作成を終えた方々が、次に進まれるステップになればと思います。
 
 
 
