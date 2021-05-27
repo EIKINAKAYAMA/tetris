@@ -2,9 +2,7 @@
 
 ## 本ゲームについて
 
----
-
-【URL】
+【URL】https://EIKINAKAYAMA.github.io/tetris
 
 【ルール】
 　テトリスの公式ルールを参考に、作成致しました。
@@ -14,19 +12,16 @@
 　・得点に応じて、落下速度が加速。（時間にはしておりません）
 
 【攻略情報】
-　・特定の得点を取得時後、一定列数を同時消した場合のみ攻略できるよう設定しています。
-
-
+　特定の得点を取得時後、一定列数を同時消した場合のみ攻略できるよう設定しています。
 
 ## 開発者向け
-
----
 
 本テトリスは、Reactの学習の一環として作成致しました。
 
 Reactチュートリアル https://ja.reactjs.org/tutorial/tutorial.html
 で学習した後、本テトリスのロジックを作成している為、一般的なテトリスロジックとは異なっています。
-（Reactチュートリアルで学習した際、作ってみた４目並べ：https://github.com/EIKINAKAYAMA/practice_react）
+(Reactチュートリアルで学習した際、作ってみた４目並べ：https://github.com/EIKINAKAYAMA/practice_react
+)
 
 　・一般的なロジック
 　　例1：ビット演算によるあたり判定。
