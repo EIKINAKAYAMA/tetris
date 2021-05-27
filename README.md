@@ -2,7 +2,9 @@
 
 ## 本ゲームについて
 
-【URL】https://EIKINAKAYAMA.github.io/tetris
+【URL】<br>
+
+### https://EIKINAKAYAMA.github.io/tetris
 
 【ルール】<br>
 　テトリスの公式ルールを参考に、作成致しました。<br>
