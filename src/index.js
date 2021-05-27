@@ -8,43 +8,74 @@ const maxNum = x * y
 const middleX = Math.floor(x / 2)
 
 // テトリミノの設定用関数
-function blocktemplate (middleX, x) {
+function blocktemplate (middleX, x, thisFigures) {
   const blocks =
   [
     {
       figures: [middleX - 2, middleX - 1, middleX, middleX + 1],
       color: 'lightblue',
-      angle: 0
+      angle: 0,
+      rotatedFigures: [
+        [thisFigures[0] - 2 * x + 2, thisFigures[1] - x + 1, thisFigures[2], thisFigures[3] + x - 1],
+        [thisFigures[0] + 2 * x - 2, thisFigures[1] + x - 1, thisFigures[2], thisFigures[3] - x + 1]
+      ]
     },
     {
       figures: [middleX - 1, middleX, middleX + x - 1, middleX + x],
       color: 'yellow',
       angle: 0
+      // 正方形の為、回転しない
     },
     {
       figures: [middleX, middleX + 1, middleX - 1 + x, middleX + x],
       color: 'green',
-      angle: 0
+      angle: 0,
+      rotatedFigures: [
+        [thisFigures[0] + x, thisFigures[1] + 2 * x - 1, thisFigures[2] - x, thisFigures[3] - 1],
+        [thisFigures[0] - x, thisFigures[1] - 2 * x + 1, thisFigures[2] + x, thisFigures[3] + 1]
+      ]
     },
     {
       figures: [middleX - 1, middleX, middleX + x, middleX + x + 1],
       color: 'red',
-      angle: 0
+      angle: 0,
+      rotatedFigures: [
+        [thisFigures[0] + 2, thisFigures[1] + x + 1, thisFigures[2], thisFigures[3] + x - 1],
+        [thisFigures[0] - 2, thisFigures[1] - x - 1, thisFigures[2], thisFigures[3] - x + 1]
+      ]
     },
     {
       figures: [middleX - 1, middleX + x - 1, middleX + x, middleX + x + 1],
       color: 'blue',
-      angle: 0
+      angle: 0,
+      rotatedFigures: [
+        [thisFigures[0] + 2, thisFigures[1] - x + 1, thisFigures[2], thisFigures[3] + x - 1],
+        [thisFigures[0] + 2 * x, thisFigures[1] + x + 1, thisFigures[2], thisFigures[3] - x - 1],
+        [thisFigures[0] - 2, thisFigures[1] + x - 1, thisFigures[2], thisFigures[3] - x + 1],
+        [thisFigures[0] - 2 * x, thisFigures[1] - x - 1, thisFigures[2], thisFigures[3] + x + 1]
+      ]
     },
     {
       figures: [middleX + 1, middleX + x - 1, middleX + x, middleX + x + 1],
       color: 'orange',
-      angle: 0
+      angle: 0,
+      rotatedFigures: [
+        [thisFigures[0] + 2 * x, thisFigures[1] - x + 1, thisFigures[2], thisFigures[3] + x - 1],
+        [thisFigures[0] - 2, thisFigures[1] + x + 1, thisFigures[2], thisFigures[3] - x - 1],
+        [thisFigures[0] - 2 * x, thisFigures[1] + x - 1, thisFigures[2], thisFigures[3] - x + 1],
+        [thisFigures[0] + 2, thisFigures[1] - x - 1, thisFigures[2], thisFigures[3] + x + 1]
+      ]
     },
     {
       figures: [middleX, middleX + x - 1, middleX + x, middleX + x + 1],
       color: 'purple',
-      angle: 0
+      angle: 0,
+      rotatedFigures: [
+        [thisFigures[0] + x + 1, thisFigures[1] - x + 1, thisFigures[2], thisFigures[3] + x - 1],
+        [thisFigures[0] + x - 1, thisFigures[1] + x + 1, thisFigures[2], thisFigures[3] - x - 1],
+        [thisFigures[0] - x - 1, thisFigures[1] + x - 1, thisFigures[2], thisFigures[3] - x + 1],
+        [thisFigures[0] - x + 1, thisFigures[1] - x - 1, thisFigures[2], thisFigures[3] + x + 1]
+      ]
     }
   ]
   return blocks
@@ -82,7 +113,7 @@ class Table extends React.Component {
     const nextX = 2
     const nextY = 4
     const tbody = []
-    const templateblocks = blocktemplate(nextX, nextY)
+    const templateblocks = blocktemplate(nextX, nextY, x, Array(5).fill(null))
     const blocks = this.props.color ? templateblocks.filter(f => f.color === this.props.color) : [{ figures: [-1] }]
     const figures = blocks[0].figures
     for (let i = 0; i < nextX; i++) {
@@ -188,130 +219,73 @@ class Tetris extends React.Component {
 
     if (color === 'lightblue') {
       if (angle === 0 || angle === 180) {
-        rotatedFigures[0] = figures[0] - 2 * x + 2
-        rotatedFigures[1] = figures[1] - x + 1
-        rotatedFigures[2] = figures[2]
-        rotatedFigures[3] = figures[3] + x - 1
+        rotatedFigures.push(blocktemplate(middleX, x, figures)[0].rotatedFigures[0])
       } else if (angle === 90 || angle === 270) {
-        rotatedFigures[0] = figures[0] + 2 * x - 2
-        rotatedFigures[1] = figures[1] + x - 1
-        rotatedFigures[2] = figures[2]
-        rotatedFigures[3] = figures[3] - x + 1
+        rotatedFigures.push(blocktemplate(middleX, x, figures)[0].rotatedFigures[1])
       } else {
         return
       }
     } else if (color === 'green') {
       if (angle === 0 || angle === 180) {
-        rotatedFigures[0] = figures[0] + x
-        rotatedFigures[1] = figures[1] + 2 * x - 1
-        rotatedFigures[2] = figures[2] - x
-        rotatedFigures[3] = figures[3] - 1
+        console.log(figures)
+        rotatedFigures.push(blocktemplate(middleX, x, figures)[2].rotatedFigures[0])
+        console.log(rotatedFigures)
       } else if (angle === 90 || angle === 270) {
-        rotatedFigures[0] = figures[0] - x
-        rotatedFigures[1] = figures[1] - 2 * x + 1
-        rotatedFigures[2] = figures[2] + x
-        rotatedFigures[3] = figures[3] + 1
+        rotatedFigures.push(blocktemplate(middleX, x, figures)[2].rotatedFigures[1])
       } else {
         return
       }
     } else if (color === 'red') {
       if (angle === 0 || angle === 180) {
-        rotatedFigures[0] = figures[0] + 2
-        rotatedFigures[1] = figures[1] + x + 1
-        rotatedFigures[2] = figures[2]
-        rotatedFigures[3] = figures[3] + x - 1
+        rotatedFigures.push(blocktemplate(middleX, x, figures)[3].rotatedFigures[0])
       } else if (angle === 90 || angle === 270) {
-        rotatedFigures[0] = figures[0] - 2
-        rotatedFigures[1] = figures[1] - x - 1
-        rotatedFigures[2] = figures[2]
-        rotatedFigures[3] = figures[3] - x + 1
+        rotatedFigures.push(blocktemplate(middleX, x, figures)[3].rotatedFigures[1])
       } else {
         return
       }
     } else if (color === 'blue') {
       if (angle === 0) {
-        rotatedFigures[0] = figures[0] + 2
-        rotatedFigures[1] = figures[1] - x + 1
-        rotatedFigures[2] = figures[2]
-        rotatedFigures[3] = figures[3] + x - 1
+        rotatedFigures.push(blocktemplate(middleX, x, figures)[4].rotatedFigures[0])
       } else if (angle === 90) {
-        rotatedFigures[0] = figures[0] + 2 * x
-        rotatedFigures[1] = figures[1] + x + 1
-        rotatedFigures[2] = figures[2]
-        rotatedFigures[3] = figures[3] - x - 1
+        rotatedFigures.push(blocktemplate(middleX, x, figures)[4].rotatedFigures[1])
       } else if (angle === 180) {
-        rotatedFigures[0] = figures[0] - 2
-        rotatedFigures[1] = figures[1] + x - 1
-        rotatedFigures[2] = figures[2]
-        rotatedFigures[3] = figures[3] - x + 1
+        rotatedFigures.push(blocktemplate(middleX, x, figures)[4].rotatedFigures[2])
       } else if (angle === 270) {
-        rotatedFigures[0] = figures[0] - 2 * x
-        rotatedFigures[1] = figures[1] - x - 1
-        rotatedFigures[2] = figures[2]
-        rotatedFigures[3] = figures[3] + x + 1
-      } else {
-        return
+        rotatedFigures.push(blocktemplate(middleX, x, figures)[4].rotatedFigures[3])
       }
     } else if (color === 'orange') {
       if (angle === 0) {
-        rotatedFigures[0] = figures[0] + 2 * x
-        rotatedFigures[1] = figures[1] - x + 1
-        rotatedFigures[2] = figures[2]
-        rotatedFigures[3] = figures[3] + x - 1
+        rotatedFigures.push(blocktemplate(middleX, x, figures)[5].rotatedFigures[0])
       } else if (angle === 90) {
-        rotatedFigures[0] = figures[0] - 2
-        rotatedFigures[1] = figures[1] + x + 1
-        rotatedFigures[2] = figures[2]
-        rotatedFigures[3] = figures[3] - x - 1
+        rotatedFigures.push(blocktemplate(middleX, x, figures)[5].rotatedFigures[1])
       } else if (angle === 180) {
-        rotatedFigures[0] = figures[0] - 2 * x
-        rotatedFigures[1] = figures[1] + x - 1
-        rotatedFigures[2] = figures[2]
-        rotatedFigures[3] = figures[3] - x + 1
+        rotatedFigures.push(blocktemplate(middleX, x, figures)[5].rotatedFigures[2])
       } else if (angle === 270) {
-        rotatedFigures[0] = figures[0] + 2
-        rotatedFigures[1] = figures[1] - x - 1
-        rotatedFigures[2] = figures[2]
-        rotatedFigures[3] = figures[3] + x + 1
-      } else {
-        return
+        rotatedFigures.push(blocktemplate(middleX, x, figures)[5].rotatedFigures[3])
       }
     } else if (color === 'purple') {
       if (angle === 0) {
-        rotatedFigures[0] = figures[0] + x + 1
-        rotatedFigures[1] = figures[1] - x + 1
-        rotatedFigures[2] = figures[2]
-        rotatedFigures[3] = figures[3] + x - 1
+        rotatedFigures.push(blocktemplate(middleX, x, figures)[6].rotatedFigures[0])
       } else if (angle === 90) {
-        rotatedFigures[0] = figures[0] + x - 1
-        rotatedFigures[1] = figures[1] + x + 1
-        rotatedFigures[2] = figures[2]
-        rotatedFigures[3] = figures[3] - x - 1
+        rotatedFigures.push(blocktemplate(middleX, x, figures)[6].rotatedFigures[1])
       } else if (angle === 180) {
-        rotatedFigures[0] = figures[0] - x - 1
-        rotatedFigures[1] = figures[1] + x - 1
-        rotatedFigures[2] = figures[2]
-        rotatedFigures[3] = figures[3] - x + 1
+        rotatedFigures.push(blocktemplate(middleX, x, figures)[6].rotatedFigures[2])
       } else if (angle === 270) {
-        rotatedFigures[0] = figures[0] - x + 1
-        rotatedFigures[1] = figures[1] - x - 1
-        rotatedFigures[2] = figures[2]
-        rotatedFigures[3] = figures[3] + x + 1
-      } else {
-        return
+        rotatedFigures.push(blocktemplate(middleX, x, figures)[6].rotatedFigures[3])
       }
     } else {
       return
     }
 
-    if (rotatedFigures.find(f => f % x === 0 || f % x === x - 1)) {
+    // 回転できる場所にいるときは、回転した配列を、回転できない場所にいるときはretun
+    if (rotatedFigures[0].find(f => f % x === 0 || f % x === x - 1)) {
       return null
-    } else if (rotatedFigures.find(f => board[f - 1] !== null)) {
+    } else if (rotatedFigures[0].find(f => board[f - 1] !== null)) {
       return null
     } else {
       this.setState({
         currentBlock: {
-          figures: rotatedFigures,
+          figures: rotatedFigures[0],
           color: color,
           angle: rotatedAngle
         }
@@ -319,7 +293,6 @@ class Tetris extends React.Component {
     }
   }
 
-  // 左に動かす
   moveLeft () {
     const history = this.state.histories
     const current = history[history.length - 1]
@@ -344,13 +317,12 @@ class Tetris extends React.Component {
     }
   }
 
-  // 右に動かす
   moveRight () {
     const history = this.state.histories
     const current = history[history.length - 1]
     const board = current.board
     const figures = this.state.currentBlock.figures.slice(0)
-    // 左が壁の場合は、return
+    // 右が壁の場合は、return
     if (figures.find(f => f % x === x - 2)) {
       return
     }
@@ -470,7 +442,7 @@ class Tetris extends React.Component {
   }
 
   cleateblock () {
-    const blocks = blocktemplate(middleX, x)
+    const blocks = blocktemplate(middleX, x, Array(5).fill(null))
     return blocks[this.getRandomBlock()]
   }
 
@@ -509,7 +481,7 @@ class Tetris extends React.Component {
     // 次のブロックが出現する場所に、1個でも色があったら、ゲームオーバー
     if (nextBlock.find(f => board[f] !== null)) {
       this.state.score >= 5000
-        ? this.changeInfo(level, '5000点を超えるとわ。。。 いっぱい遊んで、くれたんやな、、、ありがとう！！！完敗や', 'You are winner', timeId, null)
+        ? this.changeInfo(level, '5000点以上とるとわ。。。 いっぱい遊んで、くれたんやな、、、ありがとう！！！完敗や', 'You are winner', timeId, null)
         : this.changeInfo(level, 'がははは、100年早いわ！出直してきんしゃい！', 'You are loser', timeId, null)
     } else {
       if (this.state.score < 100) {
@@ -518,12 +490,12 @@ class Tetris extends React.Component {
         this.changeInfo(2, 'ほほう！やり方は、知っているみたいだな。それじゃ行くぞ', '', timeId, 500)
       } else if (this.state.score < 1700) {
         this.changeInfo(3, 'むむむ、なかなかうまいな', '', timeId, 350)
-      } else if (this.state.score < 3000) {
+      } else if (this.state.score < 3500) {
         this.changeInfo(4, 'ま、ま、まだ大丈夫だ', '', timeId, 200)
-      } else if (this.state.score < 4100) {
-        this.changeInfo('MAX', 'こ、このままだと、負けてしまう。。あれを準備しなければ', '', timeId, 150)
+      } else if (this.state.score < 4500) {
+        this.changeInfo('MAX', 'こ、このままだと、負けてしまう。。あれを準備しよう。。。', '', timeId, 150)
       } else {
-        this.changeInfo('奥義発動', '奥義発動', '', timeId, 10)
+        this.changeInfo('奥義発動', '勝たせない！', '', timeId, 10)
       }
     }
     this.fallblock()

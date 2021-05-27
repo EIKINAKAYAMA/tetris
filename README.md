@@ -1,70 +1,74 @@
-# Getting Started with Create React App
+# 最難テトリス ”ナカヤマン”
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 本ゲームについて
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+【URL】
 
-### `npm start`
+【ルール】
+　テトリスの公式ルールを参考に、作成致しました。
+　・テトリミノは計７種類。
+　・横一列並べると削除し、得点が加算。
+　・同時に削除した列数に応じてボーナス得点が加算。
+　・得点に応じて、落下速度が加速。（時間にはしておりません）
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+【攻略情報】
+　・特定の得点を取得時後、一定列数を同時消した場合のみ攻略できるよう設定しています。
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 開発者向け
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+本テトリスは、Reactの学習の一環として作成致しました。
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Reactチュートリアル https://ja.reactjs.org/tutorial/tutorial.html
+で学習した後、本テトリスのロジックを作成している為、一般的なテトリスロジックとは異なっています。
+（Reactチュートリアルで学習した際、作ってみた４目並べ：https://github.com/EIKINAKAYAMA/practice_react）
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+　・一般的なロジック
+　　例1：ビット演算によるあたり判定。
+　　例2 : テトリミノ単体に対して、二次元行列を作成し回転を考慮。
+       
+　　参考：http://kmaebashi.com/programmer/reacttetris/program.html
+　　一般的なロジックを元に、Reactでテトリスを作成しているサイトになります。
+　　UIや考え方など参考になったのでオススメです。
 
-### `npm run eject`
+　・本ロジック
+　　Reactチュートリアルと同様、盤面に対して全てのマス目の数を保持しています。
+       ぜひ、Reactチュートリアルの作成を終えた方々が、次に進まれるステップになればと思います。
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### 開発STEP
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+---
 
-## Learn More
+##### ①テトリスの盤面を作成する。盤面のマス目全てに番号を保持します。
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+##### ②保持する状態を決定する。（作成時は、盤面履歴と、色くらいで）
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+##### ③②で保持した色を実際に盤面に表示させ、時間と共に落下させるようにします。
 
-### Code Splitting
+##### ④落ちてくる色を配列に。（これによりテトリミノが落ちてくるようになります）
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+##### ⑤落ちてくる配列を複数用意し、最下層、または色がある場合はFixするようにします。
 
-### Analyzing the Bundle Size
+##### ⑥状態に、「落下中の配列」と「次に落下する配列」を保持し、Fixした際、「次に落下する配列」＝「落下中の配列」と変化するようにします。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜
 
-### Making a Progressive Web App
+ここまでで、次々と落下して積み上げられていく、テトリスもどきが完成します。
+あとは、細かい動きをつけるだけとなります。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜
 
-### Advanced Configuration
+##### ⑦続いて、ブロックの左右の動きのロジックを作成。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+##### ⑧ブロックの回転ロジックを作成。
 
-### Deployment
+##### ⑨横一列の際は、ブロックを削除するようにします。（注：削除された瞬間を描画する方が、テトリスらしくなる為、削除時の状態を保持する必要があります）
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+##### ⑩最後に、得点ロジックや、落下スピードの調整、UIの装飾などを任意に実施すると完成します。
