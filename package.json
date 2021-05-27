@@ -19,7 +19,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "http://EIKINAKAYAMA.github.io/tetris",
+  "homepage": "https://EIKINAKAYAMA.github.io/tetris",
   "eslintConfig": {
     "extends": [
       "react-app",
