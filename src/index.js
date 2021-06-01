@@ -1,7 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
+import GA4React from 'ga-4-react'
 
+const ga4react = new GA4React('G-GB64VYNVM1')
 const x = 12 // x=（実際に表示させたい数）＋２（左右の隠し分）
 const y = 22 // y=（実際に表示させたい数）＋２（最上位列の隠し分）
 const maxNum = x * y
@@ -564,7 +566,12 @@ class Tetris extends React.Component {
   }
 }
 
-ReactDOM.render(
-  <Tetris />,
-  document.getElementById('root')
-)
+(async _ => {
+  await ga4react.initialize()
+  ReactDOM.render(
+    <React.StrictMode>
+      <Tetris />
+    </React.StrictMode>,
+    document.getElementById('root')
+  )
+})()
