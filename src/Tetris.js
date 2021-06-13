@@ -192,7 +192,8 @@ class Tetris extends React.Component {
       score: 0,
       level: 0,
       message: '',
-      judge: ''
+      judge: '',
+      language: ''
     }
     // キー操作が行われた時
     window.onkeydown = (e) => {
@@ -471,7 +472,6 @@ class Tetris extends React.Component {
     const nextBlock = this.state.nextBlock.figures
     const level = this.state.level
     const { t } = this.props
-
     if (board.includes('delete')) {
       this.delete()
     }
@@ -508,7 +508,20 @@ class Tetris extends React.Component {
     this.fallblock()
   }
 
+  // i18nextのAPIでブラウザの言語を習得して判別しているが、対応していない言語は全て英語にする関数を実行する
+  checkLanguage () {
+    const language = this.state.language
+    const { i18n } = this.props
+    if (language === '') {
+      window.navigator.language === 'ja' ? i18n.changeLanguage('ja') : i18n.changeLanguage('en')
+      this.setState({
+        language: 'SETED'
+      })
+    }
+  }
+
   startGame () {
+    this.checkLanguage()
     this.mainloop()
   }
 
@@ -520,6 +533,7 @@ class Tetris extends React.Component {
     const history = this.state.histories
     const current = history[history.length - 1]
     const { t, i18n } = this.props
+
     return (
       <div className='wrapper-container'>
         <div className='tetris'>
@@ -528,8 +542,8 @@ class Tetris extends React.Component {
             <p className='explain'>{t('スコア5000点以上とって、ナカヤマンをぶっ倒せ！！！')}</p>
           </div>
           <div className='button'>
-            <button type='button' class='changeLanguage' onClick={() => { i18n.changeLanguage('ja') }}>日本語</button>
-            <button type='button' class='changeLanguage' onClick={() => { i18n.changeLanguage('en') }}>English</button>
+            <button type='button' className='changeLanguage' onClick={() => { i18n.changeLanguage('ja') }}>日本語</button>
+            <button type='button' className='changeLanguage' onClick={() => { i18n.changeLanguage('en') }}>English</button>
           </div>
           <div className='tetris-container'>
             <Board
