@@ -1,16 +1,39 @@
 html {
+    height: 100%;
     touch-action: manipulation;
 }
 
-.wrapper-container {
-    display: inline-block;
+#root{
+    height: 100%;
 }
 
-.tetris-container {
-    display: flex;
-    flex-direction: row;
-    margin: 10px;
-    background-color: #333333;
+body {
+    height: 100%;
+    margin: 0;
+}
+
+.wrapper-container {
+    width: 100%;
+    height: 100%;
+    background: url("./img/art_space.jpeg") no-repeat;
+    background-size: cover;
+}
+h1 {
+    padding-top: 20px;
+    font-size: 38px;
+    color: red;
+    text-align:center
+}
+
+.explain {
+    text-align: center;
+    font-size: 15px;
+    background-color:rgba(255,255,255,0.5);
+    font-weight: bold;
+}
+
+p {
+    color: black
 }
 
 .information{
@@ -35,6 +58,76 @@ html {
     background-color:black;
 }
 
+
+@media screen and (min-width:480px) { 
+    /*　画面サイズが480pxからはここを読み込む　*/
+    .tetris {
+        width: 100%;
+        height: 100%;
+        margin: auto;
+    }
+}
+@media screen and (min-width:768px) and ( max-width:1024px) {
+    /*　画面サイズが768pxから1024pxまではここを読み込む　*/
+    .tetris {
+        width: 480px;
+        height: 100%;
+        margin: auto;
+    }
+}
+@media screen and (min-width:1024px) {
+    /*　画面サイズが1024pxからはここを読み込む　*/
+    .tetris {
+        width: 480px;
+        height: 100%;
+        margin: auto;
+    }
+    .title {
+        height: 25%;
+    }
+}
+
+
+.tetris-container {
+    position: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    margin: 10px;
+}
+
+.tetris-panel-container {
+    width: 200px;
+    display: flex;
+    padding-left: 10px;
+    padding-right: 10px;
+    flex-direction: column;
+    color: white;
+    /* background-color: #333333; */
+    background-color:rgba(255,255,255,0.5);
+}
+
+.tetris-panel-container-padding {
+    flex-grow: 1;
+}
+
+.tetris-panel-container p {
+    margin: 0;
+    padding: 0;
+}
+
+.tetris-button-panel {
+    border-style: none;
+    width: 100%;
+}
+
+.tetris-button {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    background: #444444;
+}
+    
 td.block-type-null {
     background-color:black;
     border-top: 1px #ffffff solid;
@@ -43,7 +136,11 @@ td.block-type-null {
     border-bottom: 1px #008080 solid;
 }
 td.block-type-wall {
-    background-color:white;
+    background-color:rgba(255,255,255,0);
+    border-top: 1px rgba(255,255,255,0) solid;
+    border-left: 1px rgba(255,255,255,0) solid;
+    border-right: 1px rgba(255,255,255,0) solid;
+    border-bottom: 1px rgba(255,255,255,0) solid;
 }
 
 td.block-type-lightblue {
@@ -96,33 +193,71 @@ td.block-type-purple {
     border-bottom: 1px #008080 solid;
 }
 
-.tetris-panel-container {
-    width: 200px;
-    display: flex;
-    padding-left: 10px;
-    padding-right: 10px;
-    flex-direction: column;
-    color: white;
-    background-color: #333333;
+.button {
+    text-align:center
+}
+.changeLanguage {
+    margin: 5px 5px;
+    display: inline-block;
+	position: relative;
+	width: 80px;
+	height: 30px; 
+	line-height:30px;
+	text-align: center;
+	text-decoration: none;
+	color: #1B1B1B;
+	background: #fff;
+    background-color:rgba(255,255,255,0.8);
 }
 
-.tetris-panel-container-padding {
-    flex-grow: 1;
+.changeLanguage::before {
+    display: inline-block;
+    content: "";
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-top: 1px solid #1B1B1B;
+    border-left: 1px solid #1B1B1B;	
 }
-
-.tetris-panel-container p {
-   margin: 0;
-   padding: 0;
+.changeLanguage::after {
+    display: inline-block;
+    content: "";
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    border-top: 1px solid #1B1B1B;
+    border-right: 1px solid #1B1B1B;
 }
-
-.tetris-button-panel {
-    border-style: none;
-    width: 100%;
+.changeLanguage span::before {
+    display: inline-block;
+    content: "";
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    border-bottom: 1px solid #1B1B1B;
+    border-left: 1px solid #1B1B1B;
 }
-
-.tetris-button {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    text-align: center;
-    background: #444444;
+.changeLanguage span::after {
+    display: inline-block;
+    content: "";
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    border-bottom: 1px solid #1B1B1B;
+    border-right: 1px solid #1B1B1B;	
+}
+.changeLanguage:hover {
+	 cursor: pointer;
+	 text-decoration: none;
+	 transition: transform .3s;
+	transform-origin: center;
+	transform: scale(0.8, 0.8); 
 }

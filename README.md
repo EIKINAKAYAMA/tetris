@@ -69,3 +69,11 @@ Reactチュートリアル https://ja.reactjs.org/tutorial/tutorial.html<br>
 ##### ⑨横一列の際は、ブロックを削除するようにします。（注：削除された瞬間を描画する方が、テトリスらしくなる為、削除時の状態を保持する必要があります）
 
 ##### ⑩最後に、得点ロジックや、落下スピードの調整、UIの装飾などを任意に実施すると完成します。
+
+
+### 開発STEP(カスタマイズ編(他言語対応)
+
+参考サイト：https://react.i18next.com/guides/quick-start
+
+Using the HOCで実装。
+React16.8により正式リリースされたhookでの実装を推奨。
