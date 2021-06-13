@@ -208,7 +208,7 @@ class Tetris extends React.Component {
       } else if (e.key === 'ArrowRight') {
         this.moveRight()
       } else if (e.key === 'ArrowDown') {
-        this.fallblock(false)
+        this.fallblock()
       }
     }
   }
@@ -349,27 +349,18 @@ class Tetris extends React.Component {
   }
 
   // 落とす関数（y軸をズラす）
-  needFix () {
+  fallblock () {
     const history = this.state.histories
     const current = history[history.length - 1]
     const board = current.board
-    const figures = this.state.currentBlock.figures
+    const figures = this.state.currentBlock.figures.slice(0)
 
     // 任意のブロック配列に対して、ブロックにおける最下層のFix判定用配列を作成。
     const filteredBottomFigure = figures.filter(f => figures.find(figure => figure === f + x))
     const JudgeBottomFigure = figures.filter(f => filteredBottomFigure.indexOf(f) === -1)
 
-    // Fix対象がある場合は返り値を用意する
-    return JudgeBottomFigure.find(f => maxNum < f + x) || JudgeBottomFigure.find(f => board[f + x] !== null)
-  }
-
-  fallblock (fromMouse = true) {
-    const figures = this.state.currentBlock.figures
-    if (this.needFix()) {
-      // クリックに操作の場合
-      if (fromMouse) {
-        return
-      }
+    // 配列の値のいずれかが、最下層、又は下に色がある時、Fix
+    if (JudgeBottomFigure.find(f => maxNum < f + x) || JudgeBottomFigure.find(f => board[f + x] !== null)) {
       const minY = Math.floor(Math.min(...figures) / x)
       const maxY = Math.floor(Math.max(...figures) / x)
       this.fixblock()
@@ -514,7 +505,7 @@ class Tetris extends React.Component {
         this.changeInfo(t('奥義発動'), t('勝たせない！'), '', timeId, 10)
       }
     }
-    this.fallblock(false)
+    this.fallblock()
   }
 
   // i18nextのAPIでブラウザの言語を習得して判別しているが、対応していない言語は全て英語にする関数を実行する
