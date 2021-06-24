@@ -299,3 +299,34 @@ td.block-type-purple {
     border: 2px solid #ff9900; 
     outline: 0;
 }
+
+.btn,button.btn {
+    padding: 5px 5px;
+    font-weight: 600;
+    transition: all 0.3s;
+    color: #212529;
+}
+
+/*背景*/
+.btn-wrap {
+    padding-bottom: 20px;
+    margin: auto;
+}
+
+.btn-reset {
+  border: 1px solid #ddd;
+  border-radius: 10vh;
+  background: linear-gradient(180deg, #fbfbfc 0%, #b9bdc0 100%);
+  box-shadow: -1px -5px 6px rgba(0, 0, 0, 0.2), 3px 3px 5px white,
+    0 10px 10px rgba(0, 0, 0, 0.1), inset 0 -4px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-reset:hover {
+  box-shadow: -1px -5px 6px rgba(0, 0, 0, 0.2), 3px 3px 5px white,
+    0 10px 10px rgba(0, 0, 0, 0.1), inset 0 -4px 5px rgba(0, 0, 0, 0.1),
+    inset 0 3px 3px rgba(0, 0, 0, 0.18);
+}
+
+.btn-reset:hover span {
+  transform: scale(0.96);
+}
