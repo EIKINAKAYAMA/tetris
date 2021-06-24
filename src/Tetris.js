@@ -1,4 +1,5 @@
 import React from 'react'
+import Paypal from './Paypal.js'
 import './i18n'
 import { withTranslation } from 'react-i18next'
 
@@ -549,10 +550,10 @@ class Tetris extends React.Component {
           <div className='title'>
             <h1>{t('最難テトリス ”ナカヤマン” Ver2.0')}</h1>
             <p className='explain'>{t('スコア5000点以上とって、ナカヤマンをぶっ倒せ！！！')}</p>
-          </div>
-          <div className='button'>
-            <button type='button' className='changeLanguage' onClick={() => { i18n.changeLanguage('ja') }}>日本語</button>
-            <button type='button' className='changeLanguage' onClick={() => { i18n.changeLanguage('en') }}>English</button>
+            <div className='button'>
+              <button type='button' className='changeLanguage' onClick={() => { i18n.changeLanguage('ja') }}>日本語</button>
+              <button type='button' className='changeLanguage' onClick={() => { i18n.changeLanguage('en') }}>English</button>
+            </div>
           </div>
           <div className='tetris-container'>
             <Board
@@ -595,6 +596,7 @@ class Tetris extends React.Component {
             </div>
           </div>
         </div>
+        <Paypal />
       </div>
     )
   }
