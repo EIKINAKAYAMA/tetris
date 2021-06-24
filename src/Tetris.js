@@ -196,6 +196,7 @@ class Tetris extends React.Component {
       judge: '',
       language: ''
     }
+    this.initialState = this.state
     // キー操作が行われた時
     window.onkeydown = (e) => {
       if (this.state.currentBlock == null) {
@@ -235,9 +236,7 @@ class Tetris extends React.Component {
       }
     } else if (color === 'green') {
       if (angle === 0 || angle === 180) {
-        console.log(figures)
         rotatedFigures.push(blocktemplate(middleX, x, figures)[2].rotatedFigures[0])
-        console.log(rotatedFigures)
       } else if (angle === 90 || angle === 270) {
         rotatedFigures.push(blocktemplate(middleX, x, figures)[2].rotatedFigures[1])
       } else {
@@ -535,6 +534,13 @@ class Tetris extends React.Component {
     this.mainloop()
   }
 
+  resetGame () {
+    if (this.state.judge !== '') {
+      setTimeout(this.mainloop.bind(this), 1000)
+    }
+    this.setState(this.initialState)
+  }
+
   componentDidMount () {
     this.startGame()
   }
@@ -548,7 +554,7 @@ class Tetris extends React.Component {
       <div className='wrapper-container'>
         <div className='tetris'>
           <div className='title'>
-            <h1>{t('最難テトリス ”ナカヤマン” Ver2.0')}</h1>
+            <h1>{t('最難テトリス ”ナカヤマン” Ver3.0')}</h1>
             <p className='explain'>{t('スコア5000点以上とって、ナカヤマンをぶっ倒せ！！！')}</p>
             <div className='button'>
               <button type='button' className='changeLanguage' onClick={() => { i18n.changeLanguage('ja') }}>日本語</button>
@@ -579,6 +585,9 @@ class Tetris extends React.Component {
                 </div>
               </div>
               <div className='tetris-panel-container-padding' />
+              <div className='btn-wrap'>
+                <button className='btn btn-reset' id='reset' type='button' onMouseDown={this.resetGame.bind(this)}>{t('リセット')}</button>
+              </div>
               <table className='tetris-button-panel'>
                 <tbody>
                   <tr>
